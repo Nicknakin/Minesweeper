@@ -1,4 +1,3 @@
-
 class Grid{
     constructor(width, height, density){
         this.width = width ?? 5;
@@ -36,8 +35,28 @@ class Grid{
         this.generateCells();
     }
 
+    getBoard(){
+        return this.cells.map((val, ind) => this.seen[ind]? val: 9);
+    }
+
     query(x, y){
-        return this.cells[x+y*this.width];
+        let ind = x+y*this.width;
+        let out = [this.cells[ind]];
+        this.seen[ind] = true;
+        if(this.cells[ind] == 0){
+            out = out.concat(this.queryRecurse(ind));
+        } 
+        return out;
+    }
+
+    queryRecurse(ind){
+        if(this.cells[ind] == 0){
+            let nextVisits = this.getSurrounding(ind).filter(i => !this.seen[i]);
+            nextVisits.forEach(i => this.seen[i] = true);
+            return nextVisits.flatMap(val => this.queryRecurse(val));
+        } else {
+            return [ind];
+        }
     }
 
     generateCells(){
@@ -56,3 +75,5 @@ function genUnitSquare(width){
         width-1,    width,   width+1
     ]
 }
+
+export {Grid};

@@ -1,0 +1,24 @@
+{
+  "name": "minesweeper",
+  "version": "0.0.1",
+  "description": "Minesweeper",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nicknakin/Minesweeper.git"
+  },
+  "author": "Nick Kinney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nicknakin/Minesweeper/issues"
+  },
+  "homepage": "https://github.com/Nicknakin/Minesweeper#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socketio": "^1.0.0"
+  }
+}
