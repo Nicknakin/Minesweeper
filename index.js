@@ -14,28 +14,28 @@ var io = Server(server);
 
 var Players = [];
 
-var grid = new Grid(20, 9);
 
 io.on("connection", socket => {
     console.log(`New connection! id: ${socket.id}`);
     Players.push(socket);
    
+    socket.grid = new Grid(20, 9);
     
     socket.on("getUpdate", () => {
+        let grid = socket.grid;
         socket.emit("init", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
     });
 
     socket.on("query", ({x, y}) => {
-        //x = data.x;
-        //y = data.y;
+        let grid = socket.grid;
         if(grid.query(x, y)[0] == -1){
-            grid = new Grid(20, 9);
+            socket.grid = new Grid(20, 9);
+            grid = socket.grid;
             socket.emit("init", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
         }
         socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
     });
-    
-    
+
     socket.on("disconnect", (data) => {
         console.log(`${socket.id} disconnected`);
         console.log(data);
