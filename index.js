@@ -17,7 +17,8 @@ io.on("connection", socket => {
     console.debug(`New connection! id: ${socket.id}`);
    
     //Initialize client's instanece of the game
-    socket.grid = new Grid(20, 9, 0.1);
+    socket.gridInitializers = [50, 25, 0.25];
+    socket.grid = new Grid(...socket.gridInitializers);
     
     //Handle player requesting an update without any changes
     socket.on("getUpdate", () => {
@@ -28,13 +29,14 @@ io.on("connection", socket => {
     //Handle player sending a query (with an x,y)
     socket.on("query", ({x, y}) => {
         let grid = socket.grid;
+        let output = grid.query(x, y)
         
         //If query on mine then reset board
         //TODO Emit a lose signal so that the client can display a loss screen and then request an update at their leisure
-        if(grid.query(x, y)[0] == -1){
-            socket.grid = new Grid(20, 9);
+        if(output.includes(-1)){
+            socket.grid = new Grid(...socket.gridInitializers);
             grid = socket.grid;
-        socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
+            socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
         }
 
         socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
@@ -43,12 +45,12 @@ io.on("connection", socket => {
     //Handle a player sending many queries at once
     socket.on("queries", (queries) => {
         let grid = socket.grid;
-        const outputs = queries.flatMap((accumulator, query) => grid.query(query.x, query.y));
+        const outputs = queries.flatMap((query) => grid.query(query.x, query.y));
 
         //If queries included a mine then trigger loss
         //TODO Emit a lose signal so that the client can display a loss screen and then request an update at their leisure
         if(outputs.includes(-1)){
-            socket.grid = new Grid(20, 9);
+            socket.grid = new Grid(...socket.gridInitializers);
             grid = socket.grid;
             socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
         }

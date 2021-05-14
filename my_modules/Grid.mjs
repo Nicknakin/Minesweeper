@@ -5,32 +5,31 @@ class Grid{
         this.density = density ?? 0.25;
 
         this.valid = [
-            (ind) => (ind%this.width != 0 && ind-this.width > 0),
-            (ind) => (ind%this.width != 0),
-            (ind) => (ind%this.width != 0 && ind+this.width < this.cells.length),
-            (ind) => (ind-this.width > 0),
-            (ind) => (ind+this.width < this.cells.length),
-            (ind) => (ind%this.width != this.width-1 && ind-this.width > 0),
-            (ind) => (ind%this.width != this.width-1),
-            (ind) => (ind%this.width != this.width-1 && ind+this.width < this.cells.length),
+/* tl */    (ind) => (ind%this.width != 0 && ind-this.width >= 0),
+/* cl */    (ind) => (ind%this.width != 0),
+/* bl */    (ind) => (ind%this.width != 0 && ind+this.width < this.cells.length),
+/* tc */    (ind) => (ind-this.width >= 0),
+/* bc */    (ind) => (ind+this.width < this.cells.length),
+/* tr */    (ind) => (ind%this.width != this.width-1 && ind-this.width >= 0),
+/* cr */    (ind) => (ind%this.width != this.width-1),
+/* br */    (ind) => (ind%this.width != this.width-1 && ind+this.width < this.cells.length),
         ]
 
         this.setTo = [
-            (ind) => ind-this.width-1,
-            (ind) => ind-1,
-            (ind) => ind+this.width-1,
-            (ind) => ind-this.width,
-            (ind) => ind+this.width,
-            (ind) => ind-this.width+1,
-            (ind) => ind+1,
-            (ind) => ind+this.width+1,
+/* tl */    (ind) => ind-this.width-1,
+/* cl */    (ind) => ind-1,
+/* bl */    (ind) => ind+this.width-1,
+/* tc */    (ind) => ind-this.width,
+/* bc */    (ind) => ind+this.width,
+/* tr */    (ind) => ind-this.width+1,
+/* cr */    (ind) => ind+1,
+/* br */    (ind) => ind+this.width+1,
         ]
 
         this.cells = new Array(this.width*this.height).fill().map( _ => (Math.random() < this.density)? -1 : 0);
         
         this.seen = this.cells.map(() => false);
-    
-        this.generateCells();
+        this.gameStart = false;
     }
 
     getBoard(){
@@ -39,6 +38,11 @@ class Grid{
 
     query(x, y){
         let ind = x+y*this.width;
+        if(!this.gameStart){
+            this.gameStart = true;
+            this.cells[ind] = 0;
+            this.generateCells();
+        }
         return this.queryRecurse(ind); 
     }
 
@@ -47,7 +51,7 @@ class Grid{
         this.seen[ind] = true;
         //Check if I am a non-zero, if so return
         if(this.cells[ind] != 0)
-            return [ind];
+            return [this.cells[ind]];
         //Get every square around me
         let surrounding = this.getSurrounding(ind);
         //If one of the surrounding cells has been seen ignore it

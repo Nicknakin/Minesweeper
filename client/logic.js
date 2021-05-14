@@ -6,12 +6,12 @@ var cachedData;
 
 
 const valid = [
-    (ind) => (ind%gamewidth != 0 && ind-gamewidth > 0),
+    (ind) => (ind%gamewidth != 0 && ind-gamewidth >= 0),
     (ind) => (ind%gamewidth != 0),
     (ind) => (ind%gamewidth != 0 && ind+gamewidth < gamewidth*gameheight),
-    (ind) => (ind-gamewidth > 0),
+    (ind) => (ind-gamewidth >= 0),
     (ind) => (ind+gamewidth < gamewidth*gameheight),
-    (ind) => (ind%gamewidth != gamewidth-1 && ind-gamewidth > 0),
+    (ind) => (ind%gamewidth != gamewidth-1 && ind-gamewidth >= 0),
     (ind) => (ind%gamewidth != gamewidth-1),
     (ind) => (ind%gamewidth != gamewidth-1 && ind+gamewidth < gamewidth*gameheight),
 ]
@@ -72,7 +72,7 @@ function mouseClicked(){
         drawBoard(cachedData);
     }
     else if(mouseButton === LEFT && x < gamewidth && y < gameheight && !flags[y][x]){
-        if(cachedData.grid[x+y*gamewidth] == 9)
+        if(cachedData.grid[x+y*gamewidth] == 9 || cachedData.gird[x+y*gamewidth] == 0)
             socket.emit("query", {x, y});
         else {
             queries = valid.map((check, i) => check(x+y*gamewidth)? setTo[i](x+y*gamewidth):null).filter(val => val!=null)
