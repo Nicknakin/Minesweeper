@@ -72,7 +72,7 @@ function mouseClicked(){
         drawBoard(cachedData);
     }
     else if(mouseButton === LEFT && x < gamewidth && y < gameheight && !flags[y][x]){
-        if(cachedData.grid[x+y*gamewidth] == 9 || cachedData.gird[x+y*gamewidth] == 0)
+        if(cachedData.grid[x+y*gamewidth] == 9 || cachedData.grid[x+y*gamewidth] == 0)
             socket.emit("query", {x, y});
         else {
             queries = valid.map((check, i) => check(x+y*gamewidth)? setTo[i](x+y*gamewidth):null).filter(val => val!=null)
