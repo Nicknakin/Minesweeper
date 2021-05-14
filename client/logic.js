@@ -80,7 +80,7 @@ function mouseClicked(){
             queries = queries.map(val => {return {x:val%gamewidth, y:Math.floor(val/gamewidth)}});
             if(queries.filter(val => flags[val.y][val.x]).length == cachedData.grid[x+y*gamewidth]){
                 queries = queries.filter(val => !flags[val.y][val.x]);
-                queries.forEach(val => socket.emit("query", val));
+                socket.emit("queries", queries);
             }
         }
     } 
