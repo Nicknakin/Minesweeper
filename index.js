@@ -34,6 +34,7 @@ io.on("connection", socket => {
         if(grid.query(x, y)[0] == -1){
             socket.grid = new Grid(20, 9);
             grid = socket.grid;
+        socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
         }
 
         socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
@@ -49,6 +50,7 @@ io.on("connection", socket => {
         if(outputs.includes(-1)){
             socket.grid = new Grid(20, 9);
             grid = socket.grid;
+            socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
         }
 
         socket.emit("update", {grid:grid.getBoard(), gwidth:grid.width, gheight:grid.height});
