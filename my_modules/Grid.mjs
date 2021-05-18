@@ -33,7 +33,11 @@ class Grid{
     }
 
     getBoard(){
-        return this.cells.map((val, ind) => this.seen[ind]? val: 9);
+        return {
+            grid:this.cells.map((val, ind) => this.seen[ind]? val: 9),
+            gwidth: this.width,
+            gheight: this.height,
+        };
     }
 
     query(x, y){
