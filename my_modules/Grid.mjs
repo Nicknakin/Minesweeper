@@ -37,6 +37,7 @@ class Grid{
             grid:this.cells.map((val, ind) => this.seen[ind]? val: 9),
             gwidth: this.width,
             gheight: this.height,
+            numMines: this.numMines,
         };
     }
 
@@ -46,6 +47,7 @@ class Grid{
             this.gameStart = true;
             this.cells[ind] = 0;
             this.generateCells();
+            this.numMines = this.cells.reduce((numMines, cell) => numMines += (cell == -1)? 1 : 0, 0);
         }
         return this.queryRecurse(ind); 
     }

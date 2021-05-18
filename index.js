@@ -40,8 +40,10 @@ io.on("connection", socket => {
                 socket.emit("init", grid.getBoard());
             }
 
+            let emission = grid.getBoard();
+            emission.id = socket.id;
             socket.emit("update", grid.getBoard());
-            socket.broadcast.to(socket.room).emit("otherUpdate", grid.getBoard());
+            socket.broadcast.to(socket.room).emit("otherUpdate", emission);
         });
 
         //Handle a player sending many queries at once
@@ -57,8 +59,10 @@ io.on("connection", socket => {
                 socket.emit("init", grid.getBoard());
             }
 
+            let emission = grid.getBoard();
+            emission.id = socket.id;
             socket.emit("update", grid.getBoard());
-            socket.broadcast.to(socket.room).emit("otherUpdate", grid.getBoard());
+            socket.broadcast.to(socket.room).emit("otherUpdate", emission);
         });
 
     });
@@ -74,9 +78,16 @@ io.on("connection", socket => {
         //Set our room to a room value and then join the room
         socket.room = room;
         socket.join(room);
+        // 
+        //io.sockets.adapter.rooms[room].sockets.filter(val => val.id != socket.id).forEach(otherPlayer => {
+        //    let emission = otherPlayer.grid.getBoard();
+        //    emission.id = otherPlayer.id;
+        //    socket.emit("otherUpdate", emission);
+        //});
     });
 
     socket.on("getRooms", () => {
+        console.log(io.sockets.adapter.rooms);
         socket.emit("rooms", {
             rooms : Object.keys(io.sockets.adapter.rooms),
         });
